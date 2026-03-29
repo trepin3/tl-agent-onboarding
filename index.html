@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Taylored Legacy — Agent Onboarding</title>
+<style>
+:root {
+  --bg: #f5f5f7;
+  --card: #ffffff;
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --primary: #1B2A4A;
+  --primary-light: #2a3f6a;
+  --accent: #C8952A;
+  --accent-light: #d4a84a;
+  --success: #30d158;
+  --warning: #ff9f0a;
+  --danger: #ff453a;
+  --border: #d2d2d7;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --input-bg: #f0f0f5;
+}
+
+[data-theme="dark"] {
+  --bg: #000000;
+  --card: #1c1c1e;
+  --text: #f5f5f7;
+  --text-secondary: #98989d;
+  --primary: #3a5a8a;
+  --primary-light: #4a6a9a;
+  --accent: #d4a84a;
+  --accent-light: #e0ba60;
+  --border: #38383a;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.5);
+  --input-bg: #2c2c2e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* TOP BAR */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--primary);
+  color: white;
+  padding: 14px 16px;
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar h1 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.top-bar-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+body.on-welcome .top-bar { display: none; }
+body.on-welcome .bottom-nav { display: none; }
+
+/* MAIN CONTENT */
+.main-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+  padding-bottom: 120px;
+}
+
+/* WELCOME SCREEN */
+.welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.welcome-logo {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  margin-bottom: 20px;
+  color: white;
+  box-shadow: var(--shadow-lg);
+}
+
+.welcome-screen h1 {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  margin-bottom: 4px;
+  color: var(--primary);
+}
+
+.welcome-screen .brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.welcome-screen p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 360px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+.welcome-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.welcome-btn {
+  padding: 16px 24px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  text-align: center;
+}
+
+.welcome-btn:active { transform: scale(0.97); }
+
+.welcome-btn.primary {
+  background: var(--primary);
+  color: white;
+}
+
+.welcome-btn.secondary {
+  background: var(--card);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+/* SECTIONS */
+.step-section {
+  display: none;
+  animation: fadeIn 0.35s ease;
+}
+
+.step-section.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.step-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+  background: rgba(200,149,42,0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  margin-bottom: 4px;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.card-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.card-text strong { font-weight: 700; }
+
+.card-text a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.card-text a:hover { text-decoration: underline; }
+
+/* HIGHLIGHT CARD */
+.highlight-card {
+  background: linear-gradient(135deg, rgba(27,42,74,0.06), rgba(200,149,42,0.06));
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+[data-theme="dark"] .highlight-card {
+  background: linear-gradient(135deg, rgba(58,90,138,0.15), rgba(200,149,42,0.1));
+}
+
+.highlight-card .card-header { color: var(--accent); }
+
+/* TIP CARD */
+.tip-card {
+  background: rgba(48,209,88,0.08);
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+[data-theme="dark"] .tip-card {
+  background: rgba(48,209,88,0.06);
+}
+
+.tip-card strong { color: var(--success); }
+
+/* WARNING CARD */
+.warning-card {
+  background: rgba(255,159,10,0.08);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* CHECKLIST */
+.checklist { list-style: none; }
+
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.checklist-item:last-child { border-bottom: none; }
+
+.check-circle {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+  margin-top: 2px;
+}
+
+.checklist-item.checked .check-circle {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.checklist-text {
+  font-size: 15px;
+  line-height: 1.45;
+  flex: 1;
+}
+
+.checklist-item.checked .checklist-text {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.checklist-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  font-style: italic;
+}
+
+/* ACTION BUTTON */
+.action-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  margin-bottom: 14px;
+}
+
+.action-btn:active { transform: scale(0.97); }
+
+.action-btn.gold {
+  background: var(--accent);
+  color: white;
+}
+
+.action-btn.navy {
+  background: var(--primary);
+  color: white;
+}
+
+.action-btn.outline {
+  background: var(--card);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+/* STEP NUMBER */
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-bottom: 16px;
+}
+
+.step-row .card-text { flex: 1; }
+
+/* PROGRESS BAR */
+.progress-container {
+  padding: 0 16px 12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.progress-segment {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.2);
+  transition: background 0.3s;
+}
+
+.progress-segment.completed { background: var(--accent); }
+.progress-segment.active { background: white; }
+
+.progress-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+}
+
+/* SUPPORT FOOTER */
+.support-footer {
+  text-align: center;
+  padding: 20px 16px;
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.support-footer p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.support-footer a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  gap: 10px;
+  z-index: 99;
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.nav-btn:active { transform: scale(0.97); }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+.nav-btn:disabled:active { transform: none; }
+
+.nav-btn.primary {
+  background: var(--primary);
+  color: white;
+}
+
+.nav-btn.secondary {
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+/* RESPONSIVE */
+@media (min-width: 768px) {
+  .main-content { padding: 24px; padding-bottom: 120px; }
+  .card-text { font-size: 17px; }
+}
+
+/* CODE BOX */
+.code-box {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  margin: 8px 0;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* CARRIER GRID */
+.carrier-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.carrier-tag {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(27,42,74,0.08);
+  color: var(--primary);
+  border: 1.5px solid var(--border);
+}
+
+[data-theme="dark"] .carrier-tag {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
+</style>
+</head>
+<body class="on-welcome">
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div>
+    <h1 id="currentStepTitle">Agent Onboarding</h1>
+  </div>
+  <div class="top-bar-right">
+    <button class="icon-btn" onclick="toggleTheme()" title="Dark Mode">&#127769;</button>
+    <button class="icon-btn" onclick="goHome()" title="Home">&#8962;</button>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="top-bar" id="progressBarContainer" style="padding-top:0;padding-bottom:0;border-top:1px solid rgba(255,255,255,0.1);">
+  <div class="progress-container" style="padding:10px 0;width:100%;">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-label" id="progressLabel"></div>
+  </div>
+</div>
+
+<div class="main-content">
+
+  <!-- ======== WELCOME ======== -->
+  <div class="step-section active" id="welcome">
+    <div class="welcome-screen">
+      <div class="welcome-logo">&#9733;</div>
+      <div class="brand">Taylored Legacy</div>
+      <h1>Agent Onboarding</h1>
+      <p>Get licensed, contracted, and ready to sell. We'll walk you through every step.</p>
+      <div class="welcome-buttons">
+        <button class="welcome-btn primary" onclick="startFlow('unlicensed')">I'm Not Licensed</button>
+        <button class="welcome-btn secondary" onclick="startFlow('licensed')">I'm Already Licensed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== STEP 1: PRE-LICENSING ======== -->
+  <div class="step-section" id="step-prelicense">
+    <span class="step-badge">Step 1 of 6</span>
+    <div class="section-title">Pre-Licensing Course</div>
+    <div class="section-subtitle">Complete your state-required pre-licensing education before you can sit for the exam.</div>
+
+    <div class="highlight-card">
+      <div class="card-header">What You Need To Do</div>
+      <div class="card-text">
+        Purchase and complete a state-approved <strong>Life Insurance Pre-Licensing Course</strong> for the state of Arizona.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Recommended Providers</div>
+      <ul class="checklist">
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>ExamFX</strong> &mdash; Most popular, includes practice exams</div>
+            <div class="checklist-sub">examfx.com</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>Kaplan Financial Education</strong> &mdash; Comprehensive study material</div>
+            <div class="checklist-sub">kaplanfinancial.com</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>StateRequirement.com</strong> &mdash; Quick overview of your state's requirements</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <strong>TIP:</strong> Most pre-licensing courses can be completed in 1-2 weeks of dedicated study. Don't rush it &mdash; passing the exam on the first try saves you time and retake fees.
+    </div>
+
+    <div class="card">
+      <div class="card-header">What You'll Study</div>
+      <div class="card-text">
+        <strong>Life Insurance Basics</strong> &mdash; types of policies, term vs. whole life, riders, beneficiaries
+        <br><br>
+        <strong>Arizona State Laws &amp; Regulations</strong> &mdash; insurance code, DIFI rules, consumer protection
+        <br><br>
+        <strong>Ethics &amp; Market Conduct</strong> &mdash; licensing requirements, continuing education, agent responsibilities
+      </div>
+    </div>
+
+    <div class="support-footer">
+      <p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p>
+    </div>
+  </div>
+
+  <!-- ======== STEP 2: SCHEDULE EXAM ======== -->
+  <div class="step-section" id="step-exam">
+    <span class="step-badge">Step 2 of 6</span>
+    <div class="section-title">Schedule Your Exam</div>
+    <div class="section-subtitle">Once you've completed your pre-licensing course, schedule your state licensing exam.</div>
+
+    <div class="highlight-card">
+      <div class="card-header">What You Need To Do</div>
+      <div class="card-text">
+        Schedule your <strong>Arizona Life Insurance Licensing Exam</strong> through Pearson VUE (the official testing provider for Arizona).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Steps</div>
+      <ul class="checklist">
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Create an account at <strong>pearsonvue.com</strong></div>
+            <div class="checklist-sub">Search for "Arizona Department of Insurance"</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Select the <strong>Life Insurance</strong> exam</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Choose a testing center near you and pick a date</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Pay the exam fee</div>
+            <div class="checklist-sub">~$55</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Bring valid government-issued photo ID on exam day</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <strong>TIP:</strong> You need a <strong>70% or higher</strong> to pass the Arizona Life exam. Take all the practice tests your pre-licensing course offers &mdash; the real exam is very similar.
+    </div>
+
+    <div class="warning-card">
+      <strong>Important:</strong> After passing, you must apply for your license through the Arizona Department of Insurance (DIFI) within 12 months or you'll need to retake the exam.
+    </div>
+
+    <div class="support-footer">
+      <p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p>
+    </div>
+  </div>
+
+  <!-- ======== STEP 3: FINGERPRINTING ======== -->
+  <div class="step-section" id="step-fingerprint">
+    <span class="step-badge">Step 3 of 6</span>
+    <div class="section-title">Fingerprinting</div>
+    <div class="section-subtitle">Arizona requires electronic fingerprinting for all insurance license applicants. There are two parts: the DPS background check and the fingerprint appointment.</div>
+
+    <div class="highlight-card">
+      <div class="card-header">Part 1 &mdash; AZ DPS Background Check</div>
+      <div class="card-text">
+        Submit your background check application through the Arizona Department of Public Safety.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">DPS Steps</div>
+      <ul class="checklist">
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Go to <strong>psp.azdps.gov</strong></div>
+            <div class="checklist-sub"><a href="https://psp.azdps.gov/" target="_blank">Open AZ DPS Portal</a></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Click <strong>"Background Check for Employment/Licensure"</strong></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Create an account (or log in if you have one)</div>
+            <div class="checklist-sub">Select "Yes" &rarr; "Individual" &rarr; Fill out profile &rarr; Verify email</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Once logged in, click <strong>"Background Check for Employment/Licensure"</strong> again</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Enter fingerprint code:</div>
+            <div class="checklist-sub"><span class="code-box">INS-055.A</span></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Agree to Privacy Statement, select <strong>"Applicant"</strong> (or "Employee" if Applicant isn't available)</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Complete applicant info, e-signature, and fingerprinting preference</div>
+            <div class="checklist-sub">Select "physically present in Arizona" if you're in-state</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Review, submit, and <strong>pay the $22.44 fee</strong></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Save your <strong>Reference Number</strong> (starts with "A")</div>
+            <div class="checklist-sub">You NEED this for the fingerprint appointment. Download and save the receipt.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="warning-card">
+      <strong>Important:</strong> Save your Reference Number! It starts with the letter <strong>"A"</strong> followed by numbers. You'll need it to schedule your fingerprint appointment.
+    </div>
+
+    <div class="highlight-card" style="margin-top:20px;">
+      <div class="card-header">Part 2 &mdash; Schedule Fingerprint Appointment</div>
+      <div class="card-text">
+        After getting your Reference Number from DPS, schedule your fingerprint appointment through Fieldprint Arizona.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Fieldprint Steps</div>
+      <ul class="checklist">
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Go to <strong>fieldprintarizona.com</strong></div>
+            <div class="checklist-sub"><a href="https://fieldprintarizona.com" target="_blank">Open Fieldprint Arizona</a></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Click <strong>"Schedule Appointment"</strong></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Sign up or log in</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Scroll to <strong>"Don't have a Fieldprint Code?"</strong> section</div>
+            <div class="checklist-sub">Select "Applicant Processing" &rarr; "Continue with this Reason"</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Enter your <strong>DPS Reference Number</strong>, last name, and date of birth</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Choose a fingerprint location, fill in your info, and <strong>pay the Fieldprint fee</strong></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Attend your appointment &mdash; done!</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <strong>TIP:</strong> If you run into issues on the DPS portal, use the <strong>"Chat with us"</strong> button on the bottom right of their site. They're responsive and can help troubleshoot.
+    </div>
+
+    <div class="support-footer">
+      <p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p>
+    </div>
+  </div>
+
+  <!-- ======== STEP 4: CONTRACTING ======== -->
+  <div class="step-section" id="step-contracting">
+    <span class="step-badge" id="contractingBadge">Step 4 of 6</span>
+    <div class="section-title">Get Contracted</div>
+    <div class="section-subtitle">Submit your contracting paperwork through SureLC to get appointed with our carriers.</div>
+
+    <div class="highlight-card">
+      <div class="card-header">What You Need To Do</div>
+      <div class="card-text">
+        Complete your contracting through the <strong>SureLC portal</strong>. This is how you get officially appointed with our carrier partners so you can write business.
+      </div>
+    </div>
+
+    <a href="https://surelc.surancebay.com/sbweb/login.jsp?branchEditable=off&branchRequired=on&branchVisible=on&gaId=1290&gaName=Taylored%20Legacy" target="_blank" class="action-btn gold">Open SureLC Portal &rarr;</a>
+
+    <div class="card">
+      <div class="card-header">Carriers You'll Be Contracted With</div>
+      <div class="card-text">
+        Submit contracting for each of the following carriers:
+      </div>
+      <div class="carrier-grid">
+        <span class="carrier-tag">American Amicable</span>
+        <span class="carrier-tag">GTL</span>
+        <span class="carrier-tag">Ethos</span>
+      </div>
+      <div class="card-text" style="margin-top:12px;font-size:14px;color:var(--text-secondary);">
+        Additional carriers may be added as they become available. We'll notify you.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">What You'll Need</div>
+      <ul class="checklist">
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text">Your <strong>NPN number</strong> (National Producer Number)</div>
+            <div class="checklist-sub">You receive this after getting licensed. Find it at nipr.com</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>E&O Insurance</strong> (Errors & Omissions)</div>
+            <div class="checklist-sub">Some carriers require this before appointment</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>Government-issued photo ID</strong></div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>Voided check or bank info</strong> for commission deposits</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <strong>TIP:</strong> Contracting can take 1-2 weeks per carrier. Submit all carriers at once to get appointed as quickly as possible. Check SureLC regularly for status updates.
+    </div>
+
+    <div class="support-footer">
+      <p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p>
+    </div>
+  </div>
+
+  <!-- ======== STEP 5: AGENT PORTALS ======== -->
+  <div class="step-section" id="step-portals">
+    <span class="step-badge" id="portalsBadge">Step 5 of 6</span>
+    <div class="section-title">Set Up Agent Portals</div>
+    <div class="section-subtitle">Once contracted, set up your login for each carrier's agent portal so you can submit applications and track business.</div>
+
+    <div class="highlight-card">
+      <div class="card-header">What You Need To Do</div>
+      <div class="card-text">
+        Create your agent account on each carrier's portal. You'll use these daily to submit applications, check policy status, and access marketing materials.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Carrier Portals</div>
+      <ul class="checklist">
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>American Amicable</strong> &mdash; Agent Portal</div>
+            <div class="checklist-sub">Register at americanamicable.com once your contracting is approved</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>GTL (Guarantee Trust Life)</strong> &mdash; Agent Portal</div>
+            <div class="checklist-sub">Register at gtl.com once your contracting is approved</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>Ethos</strong> &mdash; Agent Portal</div>
+            <div class="checklist-sub">Register at ethoslife.com once your contracting is approved</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <strong>TIP:</strong> Bookmark each carrier portal on your phone and computer. You'll be logging in regularly to check application statuses and access rate sheets.
+    </div>
+
+    <div class="warning-card">
+      <strong>Note:</strong> You won't be able to set up portal access until your contracting is fully approved for each carrier. This typically takes 1-2 weeks after submitting through SureLC.
+    </div>
+
+    <div class="support-footer">
+      <p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p>
+    </div>
+  </div>
+
+  <!-- ======== STEP 6: SALES TOOLS ======== -->
+  <div class="step-section" id="step-tools">
+    <span class="step-badge" id="toolsBadge">Step 6 of 6</span>
+    <div class="section-title">Get Your Sales Tools</div>
+    <div class="section-subtitle">Set up the tools you'll use daily to manage leads, run quotes, and close deals.</div>
+
+    <div class="highlight-card">
+      <div class="card-header">What You Need To Do</div>
+      <div class="card-text">
+        Purchase your agent toolkit and get set up with each platform. These tools are how you'll manage your leads, run your scripts, and close business.
+      </div>
+    </div>
+
+    <a href="https://buy.stripe.com/eVa8yifwJ8Wa1z24gi" target="_blank" class="action-btn gold">Purchase Agent Toolkit &rarr;</a>
+
+    <div class="card">
+      <div class="card-header">What's Included</div>
+      <ul class="checklist">
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>GoHighLevel (GHL)</strong> &mdash; CRM &amp; Lead Management</div>
+            <div class="checklist-sub">Your all-in-one CRM for leads, follow-ups, texting, and pipeline tracking</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>FEX Tools</strong> &mdash; Quoting &amp; Application Tools</div>
+            <div class="checklist-sub">Run quotes across multiple carriers instantly</div>
+          </div>
+        </li>
+        <li class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-circle"></div>
+          <div>
+            <div class="checklist-text"><strong>Kep's Scripting Tool</strong> &mdash; Sales Scripts</div>
+            <div class="checklist-sub">Dynamic call scripts for FE, mortgage protection, and more</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <strong>TIP:</strong> Get familiar with GHL first &mdash; it's where you'll spend most of your time. Watch the training videos and explore the pipeline before your first call day.
+    </div>
+
+    <div class="card" style="text-align:center;margin-top:20px;">
+      <div style="font-size:40px;margin-bottom:12px;">&#127881;</div>
+      <div class="section-title" style="font-size:22px;">You're All Set!</div>
+      <div class="card-text" style="color:var(--text-secondary);font-size:15px;margin-top:8px;">
+        You've completed all the onboarding steps. Welcome to Taylored Legacy &mdash; now let's go close some deals.
+      </div>
+      <button class="action-btn navy" style="max-width:200px;margin:20px auto 0;" onclick="goHome()">Back to Home</button>
+    </div>
+
+    <div class="support-footer">
+      <p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottomNav">
+  <button class="nav-btn secondary" id="prevBtn" onclick="prevStep()" disabled>&larr; Back</button>
+  <button class="nav-btn primary" id="nextBtn" onclick="nextStep()">Next &rarr;</button>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const UNLICENSED_STEPS = [
+  { id: 'step-prelicense', label: 'Pre-License', title: 'Pre-Licensing Course' },
+  { id: 'step-exam', label: 'Exam', title: 'Schedule Your Exam' },
+  { id: 'step-fingerprint', label: 'Fingerprints', title: 'Fingerprinting' },
+  { id: 'step-contracting', label: 'Contract', title: 'Get Contracted' },
+  { id: 'step-portals', label: 'Portals', title: 'Agent Portals' },
+  { id: 'step-tools', label: 'Tools', title: 'Sales Tools' },
+];
+
+const LICENSED_STEPS = [
+  { id: 'step-contracting', label: 'Contract', title: 'Get Contracted' },
+  { id: 'step-portals', label: 'Portals', title: 'Agent Portals' },
+  { id: 'step-tools', label: 'Tools', title: 'Sales Tools' },
+];
+
+let STEPS = UNLICENSED_STEPS;
+let currentStep = -1;
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function startFlow(type) {
+  if (type === 'licensed') {
+    STEPS = LICENSED_STEPS;
+    // Update badge numbers for licensed flow
+    document.getElementById('contractingBadge').textContent = 'Step 1 of 3';
+    document.getElementById('portalsBadge').textContent = 'Step 2 of 3';
+    document.getElementById('toolsBadge').textContent = 'Step 3 of 3';
+  } else {
+    STEPS = UNLICENSED_STEPS;
+    document.getElementById('contractingBadge').textContent = 'Step 4 of 6';
+    document.getElementById('portalsBadge').textContent = 'Step 5 of 6';
+    document.getElementById('toolsBadge').textContent = 'Step 6 of 6';
+  }
+  buildProgressBar();
+  document.body.classList.remove('on-welcome');
+  document.getElementById('welcome').classList.remove('active');
+  goToStep(0);
+}
+
+function goToStep(index) {
+  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+  currentStep = index;
+  document.getElementById(STEPS[index].id).classList.add('active');
+  document.getElementById('currentStepTitle').textContent = STEPS[index].title;
+
+  // Update progress
+  STEPS.forEach((s, i) => {
+    const seg = document.getElementById('prog-' + i);
+    seg.className = 'progress-segment';
+    if (i < currentStep) seg.classList.add('completed');
+    else if (i === currentStep) seg.classList.add('active');
+  });
+
+  document.getElementById('progressLabel').textContent = STEPS[index].label + ' (' + (index + 1) + '/' + STEPS.length + ')';
+
+  // Update nav buttons
+  document.getElementById('prevBtn').disabled = currentStep === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  if (currentStep === STEPS.length - 1) {
+    nextBtn.style.display = 'none';
+  } else {
+    nextBtn.style.display = '';
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep() {
+  if (currentStep < STEPS.length - 1) goToStep(currentStep + 1);
+}
+
+function prevStep() {
+  if (currentStep > 0) goToStep(currentStep - 1);
+}
+
+function goHome() {
+  if (currentStep >= 0 && !confirm('Go back to the start? Your checklist progress will be kept.')) return;
+  currentStep = -1;
+  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('welcome').classList.add('active');
+  document.body.classList.add('on-welcome');
+}
+
+// ============================================================
+// PROGRESS BAR
+// ============================================================
+function buildProgressBar() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const seg = document.createElement('div');
+    seg.className = 'progress-segment';
+    seg.id = 'prog-' + i;
+    bar.appendChild(seg);
+  });
+}
+
+// ============================================================
+// CHECKLIST
+// ============================================================
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+// ============================================================
+// THEME
+// ============================================================
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  localStorage.setItem('theme', current === 'dark' ? 'light' : 'dark');
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+</script>
+</body>
+</html>
