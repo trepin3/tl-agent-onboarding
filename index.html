@@ -318,9 +318,36 @@ body.on-welcome #progressBarContainer { display:none; }
     <div class="support-footer"><p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p></div>
   </div>
 
+  <!-- STEP: PORTAL CHECKPOINT -->
+  <div class="step-section" id="step-checkpoint">
+    <span class="step-badge" id="checkpointBadge">Step 6 of 7</span>
+    <div class="section-title">Before You Continue</div>
+    <div class="section-subtitle">Make sure your contracting and agent portals are fully set up before purchasing your sales tools.</div>
+
+    <div class="warning-card" style="border-left-width:4px;">
+      <strong>Do not proceed until:</strong>
+      <br><br>
+      1. Your carrier contracts have been <strong>fully approved</strong> through SureLC (American Amicable, GTL, Ethos)<br><br>
+      2. You have created and logged into your <strong>agent portal</strong> with each carrier<br><br>
+      Contracting typically takes 1-2 weeks per carrier. If you haven't received confirmation emails from each carrier, you're not ready yet.
+    </div>
+
+    <div class="tip-card">
+      <strong>TIP:</strong> Check your email (including spam/junk) for approval notifications from each carrier. You can also log into SureLC to check your contracting status.
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <div class="card-header">Ready?</div>
+      <div class="card-text" style="margin-bottom:16px;">Once all your carrier portals are set up, click below to continue to your sales tools.</div>
+      <button class="action-btn gold" style="max-width:300px;margin:0 auto;" onclick="nextStep()">My Portals Are Set Up &rarr;</button>
+    </div>
+
+    <div class="support-footer"><p>Need help with this step?<br>Email <a href="mailto:traci@tlfinalexpense.com">traci@tlfinalexpense.com</a></p></div>
+  </div>
+
   <!-- STEP: SALES TOOLS -->
   <div class="step-section" id="step-tools">
-    <span class="step-badge" id="toolsBadge">Step 6 of 6</span>
+    <span class="step-badge" id="toolsBadge">Step 7 of 7</span>
     <div class="section-title">Get Your Sales Tools</div>
     <div class="section-subtitle">Set up the tools you'll use daily to manage leads, run quotes, and close deals.</div>
     <div class="highlight-card">
@@ -494,11 +521,13 @@ const UNLICENSED_STEPS = [
   {id:'step-fingerprint',label:'Fingerprints',title:'Fingerprinting'},
   {id:'step-contracting',label:'Contract',title:'Get Contracted'},
   {id:'step-portals',label:'Portals',title:'Agent Portals'},
+  {id:'step-checkpoint',label:'Verify',title:'Before You Continue'},
   {id:'step-tools',label:'Tools',title:'Sales Tools'},
 ];
 const LICENSED_STEPS = [
   {id:'step-contracting',label:'Contract',title:'Get Contracted'},
   {id:'step-portals',label:'Portals',title:'Agent Portals'},
+  {id:'step-checkpoint',label:'Verify',title:'Before You Continue'},
   {id:'step-tools',label:'Tools',title:'Sales Tools'},
 ];
 let STEPS = UNLICENSED_STEPS;
@@ -619,14 +648,16 @@ function renderFingerprintContent(s) {
 function startFlow(type) {
   if (type === 'licensed') {
     STEPS = LICENSED_STEPS;
-    document.getElementById('contractingBadge').textContent = 'Step 1 of 3';
-    document.getElementById('portalsBadge').textContent = 'Step 2 of 3';
-    document.getElementById('toolsBadge').textContent = 'Step 3 of 3';
+    document.getElementById('contractingBadge').textContent = 'Step 1 of 4';
+    document.getElementById('portalsBadge').textContent = 'Step 2 of 4';
+    document.getElementById('checkpointBadge').textContent = 'Step 3 of 4';
+    document.getElementById('toolsBadge').textContent = 'Step 4 of 4';
   } else {
     STEPS = UNLICENSED_STEPS;
-    document.getElementById('contractingBadge').textContent = 'Step 4 of 6';
-    document.getElementById('portalsBadge').textContent = 'Step 5 of 6';
-    document.getElementById('toolsBadge').textContent = 'Step 6 of 6';
+    document.getElementById('contractingBadge').textContent = 'Step 4 of 7';
+    document.getElementById('portalsBadge').textContent = 'Step 5 of 7';
+    document.getElementById('checkpointBadge').textContent = 'Step 6 of 7';
+    document.getElementById('toolsBadge').textContent = 'Step 7 of 7';
   }
   buildProgressBar();
   document.body.classList.remove('on-welcome');
@@ -648,7 +679,7 @@ function goToStep(index) {
   document.getElementById('progressLabel').textContent = STEPS[index].label+' ('+(index+1)+'/'+STEPS.length+')';
   document.getElementById('prevBtn').disabled = currentStep === 0;
   const nextBtn = document.getElementById('nextBtn');
-  nextBtn.style.display = currentStep === STEPS.length-1 ? 'none' : '';
+  nextBtn.style.display = (currentStep === STEPS.length-1 || STEPS[index].id === 'step-checkpoint') ? 'none' : '';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
